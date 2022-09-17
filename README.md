@@ -1,4 +1,4 @@
-gif-h
+gif-hpp
 =====
 
 This one-header library offers a simple, very limited way to create animated GIFs directly in code.
@@ -12,34 +12,48 @@ Only RGBA8 is currently supported as an input format. (The alpha is ignored.)
 
 Email me : ctangora -at- gmail -dot- com
 
+
+toolittlecakes:
+
+Added some RAII wrapper around old implementation.
+
 Usage:
 -------------------
-Create a GifWriter struct. 
 
-Pass the struct to GifBegin() to initialize values and write the file header.
 
-Pass frames of the animation to GifWriteFrame().
+```cpp
+#include "gif.hpp"
 
-Finally, call GifEnd() to close the file handle and free memory.
+#include <cmath>
+#include <random>
+#include <string>
 
-	#include <vector>
-	#include <cstdint>
-	#include <gif.h>
-	int main()
-	{
-		int width = 100;
-		int height = 200;
-		std::vector<uint8_t> black(width * height * 4, 0);
-		std::vector<uint8_t> white(width * height * 4, 255);
+const int width = 128;
+const int height = 128;
 
-		auto fileName = "bwgif.gif";
-		int delay = 100;
-		GifWriter g;
-		GifBegin(&g, fileName, width, height, delay);
-		GifWriteFrame(&g, black.data(), width, height, delay);
-		GifWriteFrame(&g, white.data(), width, height, delay);
-		GifEnd(&g);
+int main(int argc, const char *argv[]) {
+  const std::string filename{"./output.gif"};
 
-		return 0;
-	}
+  gif::GifWriter writer{filename, width, height, 10};
 
+  for (int frame_number = 0; frame_number < 20; ++frame_number) {
+    gif::Frame frame{width, height};
+    for (std::size_t i = 0; i < height; ++i) {
+      for (std::size_t j = 0; j < height; ++j) {
+        frame[{i, j}] = gif::Pixel{
+            static_cast<uint8_t>(rand() % 255),
+            static_cast<uint8_t>(rand() % 255),
+            static_cast<uint8_t>(rand() % 255),
+        };
+      }
+    }
+    writer.write_frame(frame);
+  }
+
+  return 0;
+}
+```
+
+Code above produces the following gif:
+
+![](output.gif)
