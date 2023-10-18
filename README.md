@@ -20,7 +20,7 @@ Added some RAII wrapper around old implementation.
 So you need to use only these three classes:
 * `GifWriter` - the entity responsible for writing `Frame`s to the file. Allows setting the delay between the `Frame`s.
 * `Frame` - 2d matrix of pixels. Supports `[{i, j}]` indexation.
-* `Pixel` - a combination of 4 numbers, defining pixel color (including alpha/opacity, which is not supported, so initialized as 0).
+* `Pixel` - a combination of 4 numbers, defining pixel color: RGB + alpha(opacity), which is not supported in the lib, so initialized as 0.
 
 Usage:
 -------------------
@@ -42,16 +42,21 @@ int main(int argc, const char *argv[]) {
   gif::GifWriter writer{filename, width, height, 10};
 
   for (int frame_number = 0; frame_number < 20; ++frame_number) {
+    // create a new black frame
     gif::Frame frame{width, height};
+
+    // set each pixel as a random color
     for (std::size_t i = 0; i < height; ++i) {
       for (std::size_t j = 0; j < height; ++j) {
         frame[{i, j}] = gif::Pixel{
-            static_cast<uint8_t>(rand() % 255),
-            static_cast<uint8_t>(rand() % 255),
-            static_cast<uint8_t>(rand() % 255),
+            rand() % 255,
+            rand() % 255,
+            rand() % 255,
         };
       }
     }
+
+    // dump frame from memory to the file
     writer.write_frame(frame);
   }
 
