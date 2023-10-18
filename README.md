@@ -10,12 +10,17 @@ So resulting files are often quite large. The hope is that it will be handy none
 
 Only RGBA8 is currently supported as an input format. (The alpha is ignored.) 
 
-Email me : ctangora -at- gmail -dot- com
+Email me : ctangora@gmail.com
 
 
-toolittlecakes:
+## toolittlecakes:
 
 Added some RAII wrapper around old implementation.
+
+So you need to use only these three classes:
+* `GifWriter` - the entity responsible for writing `Frame`s to the file. Allows setting the delay between the `Frame`s.
+* `Frame` - 2d matrix of pixels. Supports `[{i, j}]` indexation.
+* `Pixel` - a combination of 4 numbers, defining pixel color (including alpha/opacity, which is not supported, so initialized as 0).
 
 Usage:
 -------------------
