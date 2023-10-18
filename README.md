@@ -49,9 +49,9 @@ int main(int argc, const char *argv[]) {
     for (std::size_t i = 0; i < height; ++i) {
       for (std::size_t j = 0; j < height; ++j) {
         frame[{i, j}] = gif::Pixel{
-            rand() % 255,
-            rand() % 255,
-            rand() % 255,
+            static_cast<uint8_t>(rand() % 255),
+            static_cast<uint8_t>(rand() % 255),
+            static_cast<uint8_t>(rand() % 255),
         };
       }
     }
